@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A snapshot of project health, ownership, activity, and priority.">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <header>
+        <div>
+          <h1>Project Pulse</h1>
+          <p>A clear snapshot of project health, recent progress, and what needs attention.</p>
+        </div>
+      </header>
+
+      <section aria-labelledby="projects-heading">
+        <h2 id="projects-heading">Projects</h2>
+        <p id="project-status" role="status" aria-live="polite">Loading projects…</p>
+        <ul id="project-list" class="project-grid" aria-label="Project cards"></ul>
+      </section>
+    </main>
+
+    <script>
+      const projectList = document.querySelector("#project-list");
+      const projectStatus = document.querySelector("#project-status");
+
+      const statusLabels = {
+        "on-track": "On track",
+        "at-risk": "At risk",
+        blocked: "Blocked"
+      };
+      const priorityLabels = {
+        high: "High priority",
+        medium: "Medium priority",
+        low: "Low priority"
+      };
+
+      function displayValue(value, fallback = "Not provided") {
+        return typeof value === "string" && value.trim() ? value : fallback;
+      }
+
+      function createProjectCard(project) {
+        const item = document.createElement("li");
+        const card = document.createElement("article");
+        card.classList.add("project-card");
+
+        const cardHeader = document.createElement("header");
+        cardHeader.classList.add("project-card-header");
+
+        const name = document.createElement("h3");
+        name.textContent = displayValue(project.name, "Unnamed project");
+        cardHeader.append(name);
+
+        const status = document.createElement("span");
+        status.classList.add("status-badge");
+        if (Object.hasOwn(statusLabels, project.status)) {
+          status.classList.add(project.status);
+          status.textContent = statusLabels[project.status];
+        } else {
+          status.textContent = "Status unavailable";
+        }
+        cardHeader.append(status);
+
+        const owner = document.createElement("p");
+        owner.classList.add("owner");
+        owner.textContent = `Owner: ${displayValue(project.owner)}`;
+
+        const activity = document.createElement("p");
+        activity.classList.add("recent-activity");
+        activity.textContent = `Recent activity: ${displayValue(project.recentActivity)}`;
+
+        const footer = document.createElement("footer");
+        const priority = document.createElement("span");
+        priority.classList.add("priority");
+        if (Object.hasOwn(priorityLabels, project.priority)) {
+          priority.classList.add(project.priority);
+          priority.textContent = priorityLabels[project.priority];
+        } else {
+          priority.textContent = "Priority unavailable";
+        }
+        footer.append(priority);
+
+        card.append(cardHeader, owner, activity, footer);
+        item.append(card);
+        return item;
+      }
+
+      async function loadProjects() {
+        try {
+          const response = await fetch("project-data.json");
+          if (!response.ok) {
+            throw new Error(`Project data request failed (${response.status}).`);
+          }
+
+          const data = await response.json();
+          if (!data || !Array.isArray(data.projects)) {
+            throw new Error("Project data must contain a projects array.");
+          }
+
+          if (data.projects.length === 0) {
+            projectStatus.textContent = "No projects are available yet.";
+            return;
+          }
+
+          const cards = data.projects.map(createProjectCard);
+          projectList.replaceChildren(...cards);
+          projectStatus.textContent = `${cards.length} ${cards.length === 1 ? "project" : "projects"} loaded.`;
+        } catch (error) {
+          console.error("Failed to load project data:", error);
+          projectStatus.textContent = "Project data could not be loaded. Please try again later.";
+          projectStatus.setAttribute("role", "alert");
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "projects": [
+    {
+      "name": "Aurora Portal",
+      "owner": "Ava Chen",
+      "status": "on-track",
+      "recentActivity": "Accessibility review passed; launch checklist is 2 days ahead of plan.",
+      "priority": "high"
+    },
+    {
+      "name": "Northstar CRM",
+      "owner": "Marcus Lee",
+      "status": "at-risk",
+      "recentActivity": "Data sync issues are delaying three sales workflows and need vendor follow-up.",
+      "priority": "high"
+    },
+    {
+      "name": "Harbor Ops",
+      "owner": "Priya Singh",
+      "status": "on-track",
+      "recentActivity": "Operations dashboard shipped to pilot users; feedback is mostly workflow improvements.",
+      "priority": "medium"
+    },
+    {
+      "name": "Luma Analytics",
+      "owner": "Daniel Ortiz",
+      "status": "blocked",
+      "recentActivity": "Warehouse permissions are still pending, preventing the final report refresh.",
+      "priority": "high"
+    },
+    {
+      "name": "Summit Mobile",
+      "owner": "Lena Park",
+      "status": "on-track",
+      "recentActivity": "App store metadata is approved; beta test signups are trending above target.",
+      "priority": "medium"
+    },
+    {
+      "name": "Cedar Support",
+      "owner": "Noah Brooks",
+      "status": "at-risk",
+      "recentActivity": "Ticket deflection model needs retraining after a spike in repeat escalations.",
+      "priority": "low"
+    }
+  ]
+}
